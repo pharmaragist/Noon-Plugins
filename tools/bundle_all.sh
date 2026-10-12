@@ -23,6 +23,10 @@
 #
 set -euo pipefail
 
+# ponytail: pin the locale so `sort`/`jq` output is byte-stable across machines
+# and CI runners; otherwise plugins.json order (and diffs) depends on LC_COLLATE.
+export LC_ALL=C
+
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
 SRC_DIR="$ROOT/plugins"
@@ -73,13 +77,16 @@ Environment:
 EOF
 }
 
-ZIP_EXCLUDES=('-x' '*/__pycache__/*' '*.pyc' '*/__pycache__' '*.DS_Store' '*.swp' '*~')
+ZIP_EXCLUDES=('-x' '*/__pycache__/*' '__pycache__/*' '*/__pycache__' '__pycache__' '*.pyc' '*.DS_Store' '*.swp' '*~')
 
 pack() {
     local group=$1 slug=$2 src="$SRC_DIR/$group/$slug" out="$ZIP_DIR/$group/$slug.zip"
     mkdir -p "$ZIP_DIR/$group"
     rm -f "$out"
-    (cd "$SRC_DIR/$group" && zip -q -r -X "$out" "$slug" "${ZIP_EXCLUDES[@]}")
+    # pack the plugin's contents at the archive root (manifest.json at depth 1),
+    # never under a "$slug/" prefix: installers look for manifest.json near the
+    # root and a nested dir only adds fragility if the source is ever malformed.
+    (cd "$src" && zip -q -r -X "$out" . "${ZIP_EXCLUDES[@]}")
     say "  packed  $group/$slug.zip  ($(du -h "$out" | cut -f1))"
 }
 
