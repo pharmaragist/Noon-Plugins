@@ -134,6 +134,17 @@
       "icon": "sync"
     },
     {
+      "id": "Scrcpy",
+      "name": "Scrcpy",
+      "group": "sidebar",
+      "description": "Stream and Control Phone Screen",
+      "version": "",
+      "maintainer": "Anoon",
+      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/scrcpy.png",
+      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/zip/sidebar/scrcpy.zip",
+      "icon": "android"
+    },
+    {
       "id": "VirtManager",
       "name": "VirtManager",
       "group": "sidebar",
