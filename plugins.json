@@ -58,15 +58,15 @@
       "icon": "mosque"
     },
     {
-      "id": "m3icons",
-      "name": "M3Icons",
+      "id": "MaterialSymbols",
+      "name": "MaterialSymbols",
       "group": "sidebar",
       "description": "",
       "version": "",
       "maintainer": "anoon",
-      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/m3icons.png",
-      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/m3icons.zip",
-      "icon": "grid_view"
+      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/MaterialSymbols.png",
+      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/MaterialSymbols.zip",
+      "icon": "font_download"
     },
     {
       "id": "multi-feed",
@@ -80,25 +80,25 @@
       "icon": "rss_feed"
     },
     {
-      "id": "nvu",
+      "id": "NVU",
       "name": "NVU",
       "group": "sidebar",
       "description": "",
       "version": "",
       "maintainer": "Anoon",
-      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/nvu.png",
-      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/nvu.zip",
+      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/NVU.png",
+      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/NVU.zip",
       "icon": "school"
     },
     {
-      "id": "scrcpy",
+      "id": "Scrcpy",
       "name": "Scrcpy",
       "group": "sidebar",
       "description": "",
       "version": "",
       "maintainer": "big-pickle",
-      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/scrcpy.png",
-      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/scrcpy.zip",
+      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/Scrcpy.png",
+      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/Scrcpy.zip",
       "icon": "android"
     },
     {
@@ -113,14 +113,14 @@
       "icon": "share"
     },
     {
-      "id": "sokoun",
+      "id": "Sokoun",
       "name": "Sokoun",
       "group": "sidebar",
       "description": "",
       "version": "",
       "maintainer": "PharmaRacist",
-      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/sokoun.png",
-      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/sokoun.zip",
+      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/Sokoun.png",
+      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/Sokoun.zip",
       "icon": "equalizer"
     },
     {
@@ -135,14 +135,14 @@
       "icon": "timer"
     },
     {
-      "id": "syncthing",
+      "id": "Syncthing",
       "name": "Syncthing",
       "group": "sidebar",
       "description": "",
       "version": "",
       "maintainer": "Anoon",
-      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/syncthing.png",
-      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/syncthing.zip",
+      "preview": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/main/assets/thumbs/sidebar/Syncthing.png",
+      "download": "https://raw.githubusercontent.com/pharmaragist/Noon-Plugins/dist/zip/sidebar/Syncthing.zip",
       "icon": "sync"
     },
     {

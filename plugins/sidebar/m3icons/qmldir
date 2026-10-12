@@ -1,3 +1,0 @@
-module M3Icons
-singleton M3IconsService 1.0 M3IconsService.qml
-M3Icons 1.0 M3Icons.qml

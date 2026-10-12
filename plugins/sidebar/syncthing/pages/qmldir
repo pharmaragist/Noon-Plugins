@@ -1,5 +1,0 @@
-module pages
-OverviewPage 1.0 OverviewPage.qml
-FoldersPage 1.0 FoldersPage.qml
-DevicesPage 1.0 DevicesPage.qml
-HistoryPage 1.0 HistoryPage.qml
