@@ -1,3 +1,4 @@
+#!/usr/bin/env -S uv run --script
 # /// script
 # dependencies = [
 #   "requests",
@@ -10,7 +11,6 @@ import json
 import os
 import re
 import sys
-import time
 from html.parser import HTMLParser
 from urllib.parse import unquote, urljoin
 
@@ -21,7 +21,7 @@ BASE = "https://lms.nv.edu.eg"
 COOKIE_FILE = os.path.expanduser("~/.lms_cookies.json")
 CACHE_DIR = os.path.expanduser("~/.lms_cache")
 LMS_DATA_FILE = os.environ.get(
-    "LMS_DATA_FILE" or os.path.expanduser("~/.local/state/noon/lms_data.json")
+    "LMS_DATA_FILE", os.path.expanduser("~/.local/state/noon/lms_data.json")
 )
 
 
@@ -143,8 +143,10 @@ class LMS:
             body = resp.text.strip()
             if "SessionError" in body:
                 raise RuntimeError(f"Session error downloading {url}")
-        with open(output_path, "wb") as f:
+        tmp = output_path + ".part"
+        with open(tmp, "wb") as f:
             f.write(resp.content)
+        os.replace(tmp, output_path)
 
     def close(self):
         self.sess.close()
@@ -179,7 +181,11 @@ class LMS:
                 "size": str(item.get("FileSize", "")),
                 "download_url": f"{BASE}/ELearning/DowloadFile?FileId={item['FileId']}",
                 "week": item.get("WeekNumber", ""),
+                "is_file": item.get("Type") == 0,
             }
+            fullpath = item.get("FullPath") or ""
+            if not entry["is_file"] and fullpath.startswith("http"):
+                entry["external_url"] = fullpath
             result.setdefault(course_key, []).append(entry)
 
         _write_cache(key, result)
@@ -272,7 +278,7 @@ class LMS:
             r2 = self.sess.post(
                 f"{BASE}/Questions/GetStduentQuestions", json={"CourseId": cid}
             )
-            data = r2.json().get("Item1") or r2.json()
+            data = r2.json().get("Item1") or []
 
             questions = []
             for q in data:
@@ -359,45 +365,118 @@ def safe_name(s):
     return re.sub(r'[\\/:*?"<>|]', "_", s).strip()
 
 
-def download_materials(data, lms, outdir):
-    total = sum(len(v) for v in data.values())
+EXT_MAP = {
+    "pdf": "pdf",
+    "pptx": "pptx",
+    "jpg": "jpg",
+    "png": "png",
+    "docx": "docx",
+    "xlsx": "xlsx",
+    "avi": "mp4",
+    "txt": "txt",
+}
+
+
+def target_name(f):
+    fname = f.get("file_name") or f"file_{f['file_id']}"
+    ext = EXT_MAP.get(f.get("file_type", ""), "")
+    base_name = safe_name(fname)
+    if ext and not base_name.endswith("." + ext):
+        base_name += "." + ext
+    return base_name
+
+
+def dedupe_materials(files):
+    seen = set()
+    unique = []
+    for f in files:
+        key = target_name(f).lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(f)
+    return unique
+
+
+def file_bucket(f):
+    name = (f.get("file_name") or "").lower()
+    return "labs" if re.search(r"(?<![a-z])labs?(?![a-z])", name) else "lectures"
+
+
+def download_materials(data, lms, outdir, workers=3):
+    data = {subj: dedupe_materials(files) for subj, files in data.items()}
+    root_dir = os.path.join(outdir, "NV_Materials")
+
+    tasks = []
+    for subject_name, files in data.items():
+        subj_dir = os.path.join(root_dir, safe_name(subject_name))
+        lab_dir = os.path.join(subj_dir, "labs")
+        lec_dir = os.path.join(subj_dir, "lectures")
+        os.makedirs(lab_dir, exist_ok=True)
+        os.makedirs(lec_dir, exist_ok=True)
+        for f in files:
+            if not f.get("is_file", True):
+                url = f.get("external_url")
+                label = f"LINK {target_name(f)} -> {url}" if url else f"NOTE {target_name(f)}"
+                print(label, file=sys.stderr)
+                continue
+            bin_dir = lab_dir if file_bucket(f) == "labs" else lec_dir
+            tasks.append((f, os.path.join(bin_dir, target_name(f))))
+
+    todo = []
+    for f, path in tasks:
+        if os.path.exists(path):
+            print(f"SKIP {os.path.basename(path)}", file=sys.stderr)
+        else:
+            todo.append((f, path))
+
+    total = len(todo)
+    if not todo:
+        print(f"\nSaved to {root_dir}", file=sys.stderr)
+        return
+
+    cookies = httpx.Cookies()
+    for c in lms.sess.cookies:
+        cookies.set(c.name, c.value, domain="lms.nv.edu.eg")
+    headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"}
     done = 0
 
-    for subject_name, files in data.items():
-        subj_dir = os.path.join(outdir, safe_name(subject_name))
-        os.makedirs(subj_dir, exist_ok=True)
+    async def run():
+        nonlocal done
+        sem = asyncio.Semaphore(workers)
+        async with httpx.AsyncClient(
+            headers=headers, cookies=cookies, timeout=120, follow_redirects=True
+        ) as cl:
 
-        for f in files:
-            done += 1
-            fname = f.get("file_name") or f"file_{f['file_id']}"
-            ext_map = {
-                "pdf": "pdf",
-                "pptx": "pptx",
-                "jpg": "jpg",
-                "png": "png",
-                "docx": "docx",
-                "xlsx": "xlsx",
-                "avi": "mp4",
-                "txt": "txt",
-            }
-            ext = ext_map.get(f["file_type"], "")
-            base_name = safe_name(fname)
-            if ext and not base_name.endswith("." + ext):
-                base_name += "." + ext
-            path = os.path.join(subj_dir, base_name)
+            async def get_one(f, path):
+                nonlocal done
+                url = f["download_url"]
+                if not url.startswith("http"):
+                    url = f"{BASE}{url}"
+                async with sem:
+                    try:
+                        tmp = path + ".part"
+                        async with cl.stream("GET", url) as r:
+                            r.raise_for_status()
+                            with open(tmp, "wb") as fh:
+                                async for chunk in r.aiter_bytes():
+                                    fh.write(chunk)
+                        if os.path.getsize(tmp) < 100:
+                            with open(tmp, "rb") as fh:
+                                body = fh.read().decode(errors="replace")
+                            os.remove(tmp)
+                            if "SessionError" in body or not body.strip():
+                                raise RuntimeError(f"Session error downloading {url}")
+                        os.replace(tmp, path)
+                        done += 1
+                        print(f"[{done}/{total}] {os.path.basename(path)}", file=sys.stderr)
+                    except Exception as e:
+                        print(f"  FAILED {os.path.basename(path)}: {e}", file=sys.stderr)
 
-            if os.path.exists(path):
-                print(f"[{done}/{total}] SKIP {base_name}", file=sys.stderr)
-                continue
+            await asyncio.gather(*[get_one(f, p) for f, p in todo])
 
-            print(f"[{done}/{total}] {base_name}", file=sys.stderr)
-            try:
-                lms.download_file(f["download_url"], path)
-                time.sleep(0.15)
-            except Exception as e:
-                print(f"  FAILED: {e}", file=sys.stderr)
-
-    print(f"\nSaved to {outdir}", file=sys.stderr)
+    asyncio.run(run())
+    print(f"\nSaved to {root_dir}", file=sys.stderr)
 
 
 def main():
@@ -562,25 +641,34 @@ def main():
             return
 
         if cmd == "download":
-            dist_idx = None
-            for i, a in enumerate(cmd_args):
+            outdir = None
+            url = None
+            positional = []
+            i = 0
+            while i < len(cmd_args):
+                a = cmd_args[i]
                 if a == "--dist" and i + 1 < len(cmd_args):
-                    dist_idx = i
-            if dist_idx is not None:
-                outdir = cmd_args[dist_idx + 1]
-                cmd_args = [a for i, a in enumerate(cmd_args) if i not in (dist_idx, dist_idx + 1)]
-            else:
+                    outdir = cmd_args[i + 1]
+                    i += 2
+                    continue
+                if a == "--url" and i + 1 < len(cmd_args):
+                    url = cmd_args[i + 1]
+                    i += 2
+                    continue
+                if not a.startswith("-"):
+                    positional.append(a)
+                i += 1
+
+            if outdir is None and positional:
+                outdir = positional[0]
+            if outdir is None:
                 outdir = os.environ.get("LMS_OUTDIR", "lms_files")
+            outdir = os.path.expanduser(outdir)
 
             if "--all" in cmd_args:
                 data = lms.get_materials(refresh=refresh)
                 download_materials(data, lms, outdir)
-            elif "--url" in cmd_args:
-                idx = cmd_args.index("--url")
-                if idx + 1 >= len(cmd_args):
-                    print("--url requires a URL argument", file=sys.stderr)
-                    sys.exit(1)
-                url = cmd_args[idx + 1]
+            elif url is not None:
                 os.makedirs(outdir, exist_ok=True)
                 resp = lms.sess.get(url, timeout=120, allow_redirects=True)
                 if len(resp.content) < 100:
@@ -599,11 +687,13 @@ def main():
                         fname += "." + ext.group(1)
                 path = os.path.join(outdir, safe_name(fname))
                 print(f"Downloading {fname}...", file=sys.stderr)
-                with open(path, "wb") as f:
+                tmp = path + ".part"
+                with open(tmp, "wb") as f:
                     f.write(resp.content)
+                os.replace(tmp, path)
                 print(f"Saved to {path}", file=sys.stderr)
             else:
-                print("Usage: scraper.py download --all | --url <url> [--dist <dir>]", file=sys.stderr)
+                print("Usage: scraper.py download [--all | --url <url>] [--dist <dir>] [dir]", file=sys.stderr)
             return
 
         data = lms.get_materials(refresh=refresh)

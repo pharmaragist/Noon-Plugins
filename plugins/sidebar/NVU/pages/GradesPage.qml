@@ -97,10 +97,10 @@ Item {
                 }
 
                 CircularProgress {
-                    size: 38
+                    implicitSize: 38
                     lineWidth: 4
-                    primaryColor: root.gradeColor
-                    secondaryColor: Colors.m3.m3surfaceContainerHigh
+                    colPrimary: root.gradeColor
+                    colSecondary: Colors.m3.m3surfaceContainerHigh
 
                     Anim on value {
                         from: 0

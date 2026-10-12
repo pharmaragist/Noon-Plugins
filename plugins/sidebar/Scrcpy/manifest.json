@@ -1,0 +1,16 @@
+{
+  "name": "Scrcpy",
+  "pluginGroup": "sidebar",
+  "mentainer": "big-pickle",
+  "entry": "@plugins/Scrcpy.qml",
+  "enabled": true,
+  "singletons": [
+    "ScrcpyService.qml"
+  ],
+  "icon": "android",
+  "expandable": true,
+  "detachable": true,
+  "baseSize": 560,
+  "expandSize": 900,
+  "shape": "Cookie12Sided"
+}

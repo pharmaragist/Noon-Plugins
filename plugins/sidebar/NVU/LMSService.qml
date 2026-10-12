@@ -79,7 +79,7 @@ Singleton {
         return c;
     }
 
-    readonly property string scraperPath: Paths.plugins.main + "/sidebar/lms-dashboard/scraper.py"
+    readonly property string scraperPath: Paths.plugins.main + "/sidebar/NVU/scraper.py"
 
     Process {
         id: refresher

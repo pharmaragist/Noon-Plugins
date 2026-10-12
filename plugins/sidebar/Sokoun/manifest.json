@@ -1,0 +1,11 @@
+{
+  "name": "Sokoun",
+  "pluginGroup": "sidebar",
+  "mentainer": "PharmaRacist",
+  "entry": "@plugins/Ambients.qml",
+  "enabled": true,
+  "singletons": ["AmbientSoundsService.qml"],
+  "icon": "equalizer",
+  "expandable": false,
+  "shape": "Cookie12Sided"
+}

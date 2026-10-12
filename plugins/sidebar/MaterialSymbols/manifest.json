@@ -1,0 +1,12 @@
+{
+  "name": "MaterialSymbols",
+  "pluginGroup": "sidebar",
+  "enabled": true,
+  "mentainer": "anoon",
+  "detachable": true,
+  "expandable": true,
+  "searchable": true,
+  "icon": "font_download",
+  "entry": "@plugins/MaterialSymbols.qml",
+  "shape": "Cookie12Sided"
+}

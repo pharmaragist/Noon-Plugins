@@ -11,7 +11,7 @@
     "bs4",
     "requests"
   ],
-  "enabled": false,
+  "enabled": true,
   "icon": "school",
   "expandable": true,
   "incubatable": true,

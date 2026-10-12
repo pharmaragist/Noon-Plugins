@@ -17,73 +17,31 @@ StyledRect {
     signal searchFocusRequested
     signal contentFocusRequested
 
-    property int currentPage: LMSService.data.currentPage
-    readonly property bool immersiveMode: pageStack.currentItem?.immersiveMode ?? false
+    property int currentPage: SyncthingService.data.currentPage
+    readonly property bool immersiveMode: false
     readonly property var tabs: [
-        {
-            icon: "dashboard",
-            name: "Overview"
-        },
-        {
-            icon: "folder",
-            name: "Materials"
-        },
-        {
-            icon: "calendar_month",
-            name: "Schedule"
-        },
-        {
-            icon: "grade",
-            name: "Grades"
-        },
-        {
-            icon: "quiz",
-            name: "Questions"
-        },
+        { icon: "dashboard", name: "Overview" },
+        { icon: "folder", name: "Folders" },
+        { icon: "devices", name: "Devices" },
+        { icon: "history", name: "History" },
     ]
 
-    Component {
-        id: overviewComp
-        OverviewPage {}
-    }
-    Component {
-        id: materialsComp
-        MaterialsPage {}
-    }
-    Component {
-        id: scheduleComp
-        SchedulePage {}
-    }
-    Component {
-        id: gradesComp
-        GradesPage {}
-    }
-    Component {
-        id: questionsComp
-        QuestionsPage {}
-    }
-    readonly property var pageComps: [overviewComp, materialsComp, scheduleComp, gradesComp, questionsComp]
+    Component { id: overviewComp; OverviewPage {} }
+    Component { id: foldersComp; FoldersPage {} }
+    Component { id: devicesComp; DevicesPage {} }
+    Component { id: historyComp; HistoryPage {} }
+    readonly property var pageComps: [overviewComp, foldersComp, devicesComp, historyComp]
 
     function navigateTo(index) {
         pageStack.slideRight = index > currentPage;
         currentPage = index;
-        LMSService.data.currentPage = index;
+        SyncthingService.data.currentPage = index;
         pageStack.replace(pageComps[index]);
     }
 
     CLayout {
         anchors.fill: parent
         spacing: 0
-
-        StyledText {
-            text: LMSService.refreshStatus
-            visible: LMSService.refreshStatus.length > 0 && !root.immersiveMode
-            color: LMSService.refreshing ? Colors.m3.m3tertiary : Colors.m3.m3success
-            font.pixelSize: 11
-            font.weight: 600
-            Layout.leftMargin: Padding.huge
-            Layout.bottomMargin: Padding.tiny
-        }
 
         StackView {
             id: pageStack
@@ -128,7 +86,6 @@ StyledRect {
         }
 
         PrimaryTabBar {
-            visible: !root.immersiveMode
             tabButtonList: root.tabs
             externalTrackedTab: root.currentPage
             onCurrentIndexChanged: root.navigateTo(currentIndex)

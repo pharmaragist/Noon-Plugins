@@ -1,0 +1,3 @@
+module Scrcpy
+Scrcpy 1.0 Scrcpy.qml
+singleton ScrcpyService 1.0 ScrcpyService.qml
