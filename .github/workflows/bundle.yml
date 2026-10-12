@@ -1,8 +1,9 @@
 name: bundle
 
 # Packs plugins/<group>/<slug>/ into zips and regenerates plugins.json.
-# Zips are published to the `dist` branch; main stays source-only.
-# plugins.json (on main) points download links at `dist` and previews at `main`.
+# Both are generated artifacts: they are published to the `dist` branch and
+# never committed to `main`, which stays source-only.
+# plugins.json points download links at `dist` and previews at `main`.
 
 on:
   push:
@@ -36,21 +37,7 @@ jobs:
           DOWNLOAD_BASE: https://raw.githubusercontent.com/${{ github.repository }}/dist
         run: bash tools/bundle_all.sh
 
-      - name: Commit plugins.json if it changed
-        run: |
-          set -euo pipefail
-          if git diff --quiet -- plugins.json; then
-            echo "plugins.json is already up to date"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add plugins.json
-          git commit -m "chore: regenerate plugins.json [skip ci]"
-          git pull --rebase --autostash origin main
-          git push origin HEAD:main
-
-      - name: Publish zips to dist branch
+      - name: Publish zips + index to dist branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -58,12 +45,13 @@ jobs:
           tmp=$(mktemp -d)
           mkdir -p "$tmp/zip"
           cp -r zip/. "$tmp/zip/"
+          cp plugins.json "$tmp/plugins.json"
           cd "$tmp"
           git init -q
           git checkout -q -b dist
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -qm "build: zips for ${GITHUB_SHA}"
+          git commit -qm "build: zips + index for ${GITHUB_SHA}"
           git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" dist
-          echo "published $(find zip -name '*.zip' | wc -l) zips to dist"
+          echo "published $(find zip -name '*.zip' | wc -l) zips and plugins.json to dist"

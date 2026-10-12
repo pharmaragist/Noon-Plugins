@@ -6,8 +6,8 @@
 #   1. packs every plugins/<group>/<slug>/ into zip/<group>/<slug>.zip
 #   2. regenerates plugins.json (the hub index) from the manifests
 #
-# Nothing is read from zip/ or plugins.json; both are outputs. Commit the
-# plugins/<group>/<slug>/ sources and plugins.json, never the zips.
+# zip/ and plugins.json are generated artifacts. CI publishes both to the
+# `dist` branch; never commit them. Commit only the sources and assets/.
 #
 # Usage:
 #   ./bundle_all.sh                 # pack zips + write plugins.json
@@ -61,8 +61,8 @@ Source of truth is plugins/<group>/<slug>/. This script:
   1. packs every plugins/<group>/<slug>/ into zip/<group>/<slug>.zip
   2. regenerates plugins.json (the hub index) from the manifests
 
-Nothing is read from zip/ or plugins.json; both are outputs. Commit the
-plugins/<group>/<slug>/ sources and plugins.json, never the zips.
+zip/ and plugins.json are generated artifacts published to the `dist` branch
+by CI; never commit them. Commit only the sources and assets/.
 
 Usage:
   ./bundle_all.sh                 # pack zips + write plugins.json

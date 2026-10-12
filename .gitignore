@@ -1,5 +1,7 @@
 # Build artifacts — regenerate with tools/bundle_all.sh, never commit.
+# CI publishes both to the `dist` branch.
 /zip/
+/plugins.json
 
 # Python / editor junk that can end up inside plugin sources.
 __pycache__/
