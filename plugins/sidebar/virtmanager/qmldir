@@ -1,0 +1,3 @@
+module virt-manager
+singleton VirtManagerService 1.0 VirtManagerService.qml
+VirtManager 1.0 VirtManager.qml

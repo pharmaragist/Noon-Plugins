@@ -1,0 +1,8 @@
+module Deen
+singleton AzkarService 1.0 AzkarService.qml
+Deen 1.0 Deen.qml
+singleton PrayerService 1.0 PrayerService.qml
+QuickShareService 1.0 QuickShareService.qml
+singleton QuranService 1.0 QuranService.qml
+RadioService 1.0 RadioService.qml
+SurahList 1.0 SurahList.qml

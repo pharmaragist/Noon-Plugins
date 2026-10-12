@@ -1,0 +1,18 @@
+{
+  "name": "Syncthing",
+  "pluginGroup": "sidebar",
+  "mentainer": "Anoon",
+  "entry": "@plugins/Syncthing.qml",
+  "singletons": [
+    "SyncthingService.qml"
+  ],
+  "enabled": true,
+  "icon": "sync",
+  "detachable": true,
+  "incubatable": true,
+  "expandable": true,
+  "searchable": false,
+  "baseSize": 520,
+  "expandSize": 900,
+  "shape": "Cookie12Sided"
+}

@@ -1,0 +1,10 @@
+module WineManager
+WineManager 1.0 WineManager.qml
+VersionCard 1.0 pages/VersionCard.qml
+AppCard 1.0 pages/AppCard.qml
+RemoteVersionList 1.0 pages/RemoteVersionList.qml
+ConfigEditor 1.0 pages/ConfigEditor.qml
+InstalledTab 1.0 pages/InstalledTab.qml
+BrowseTab 1.0 pages/BrowseTab.qml
+AppsTab 1.0 pages/AppsTab.qml
+ConfigTab 1.0 pages/ConfigTab.qml

@@ -1,0 +1,16 @@
+{
+  "name": "Multi-Feed",
+  "pluginGroup": "sidebar",
+  "enabled": false,
+  "mentainer": "big-pickle",
+  "detachable": true,
+  "incubatable": true,
+  "expandable": false,
+  "stealth": false,
+  "searchable": true,
+  "icon": "rss_feed",
+  "activeIcon": "rss_feed",
+  "entry": "@plugins/Entry.qml",
+  "shape": "Cookie12Sided",
+  "singletons": []
+}

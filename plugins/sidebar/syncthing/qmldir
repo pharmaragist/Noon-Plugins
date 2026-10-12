@@ -1,0 +1,4 @@
+module syncthing
+singleton SyncthingService 1.0 SyncthingService.qml
+SyncthingSchema 1.0 SyncthingSchema.qml
+Syncthing 1.0 Syncthing.qml

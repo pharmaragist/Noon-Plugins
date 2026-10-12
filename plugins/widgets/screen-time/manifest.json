@@ -1,0 +1,11 @@
+{
+  "name": "Screen Time",
+  "id": "screentime",
+  "pluginGroup": "widgets",
+  "enabled": true,
+  "mentainer": "anoon",
+  "expandable": true,
+  "icon": "timer",
+  "entry": "@plugins/Entry.qml",
+  "singletons": []
+}

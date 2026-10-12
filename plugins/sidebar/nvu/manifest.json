@@ -1,0 +1,23 @@
+{
+  "name": "NVU",
+  "pluginGroup": "sidebar",
+  "mentainer": "Anoon",
+  "entry": "@plugins/LMSDashboard.qml",
+  "singletons": [
+    "LMSService.qml"
+  ],
+  "pythonRequirements": [
+    "httpx",
+    "bs4",
+    "requests"
+  ],
+  "enabled": false,
+  "icon": "school",
+  "expandable": true,
+  "incubatable": true,
+  "detachable": true,
+  "searchable": false,
+  "baseSize": 520,
+  "expandSize": 900,
+  "shape": "Cookie12Sided"
+}

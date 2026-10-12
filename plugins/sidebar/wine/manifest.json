@@ -1,0 +1,9 @@
+{
+  "name": "Wine",
+  "pluginGroup": "sidebar",
+  "mentainer": "Anoon",
+  "entry": "@plugins/Wine.qml",
+  "enabled": false,
+  "icon": "liquor",
+  "activeIcon": "wine_bar"
+}

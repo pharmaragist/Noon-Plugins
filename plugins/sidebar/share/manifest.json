@@ -1,0 +1,19 @@
+{
+  "name": "Share",
+  "pluginGroup": "sidebar",
+  "mentainer": "PharmaRacist",
+  "entry": "@plugins/Share.qml",
+  "icon": "share",
+  "singletons": [
+    "QuickShareService.qml"
+  ],
+  "pythonRequirements": [
+    "pyquickshare"
+  ],
+  "expandable": true,
+  "incubatable": false,
+  "detachable": true,
+  "searchable": false,
+  "shape": "Clover4Leaf",
+  "enabled": false
+}

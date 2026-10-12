@@ -1,0 +1,16 @@
+{
+  "name": "Stopwatch",
+  "pluginGroup": "sidebar",
+  "enabled": true,
+  "mentainer": "anoon",
+  "detachable": true,
+  "incubatable": true,
+  "expandable": false,
+  "stealth": false,
+  "searchable": false,
+  "icon": "timer",
+  "activeIcon": "timer",
+  "entry": "@plugins/Entry.qml",
+  "shape": "Cookie12Sided",
+  "singletons": []
+}

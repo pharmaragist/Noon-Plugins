@@ -1,0 +1,13 @@
+{
+  "name": "intersheller",
+  "mentainer": "Pharmaracist",
+  "enabled": true,
+  "prefix": "#",
+  "icon": "code",
+  "shape": "Clover8Leaf",
+  "placeholder": "Learn More",
+  "showHint": true,
+  "showOsrButton": false,
+  "hinter": "() => { shell('$q '); return activeHint; }",
+  "executor": "() => exec('wl-copy \"$q\"')"
+}

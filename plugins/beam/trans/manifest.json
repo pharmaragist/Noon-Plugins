@@ -1,0 +1,13 @@
+{
+  "name": "trans",
+  "mentainer": "Pharmaracist",
+  "enabled": true,
+  "prefix": "<",
+  "icon": "summarize",
+  "shape": "Oval",
+  "placeholder": "Learn More",
+  "showHint": true,
+  "showOsrButton": false,
+  "hinter": "() => { shell('trans :ar -no-bidi -no-ansi \"$q\"'); return activeHint; }",
+  "executor": "() => exec('wl-copy \"$q\"')"
+}

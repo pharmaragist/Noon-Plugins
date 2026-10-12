@@ -1,0 +1,11 @@
+{
+  "name": "Sticky Notes",
+  "id": "stcky",
+  "pluginGroup": "widgets",
+  "enabled": false,
+  "mentainer": "Anoon",
+  "expandable": true,
+  "icon": "draft",
+  "entry": "@plugins/Entry.qml",
+  "singletons": []
+}

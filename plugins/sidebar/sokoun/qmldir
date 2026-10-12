@@ -1,0 +1,5 @@
+module Sokoun
+singleton AmbientSoundsService 1.0 AmbientSoundsService.qml
+Ambients 1.0 Ambients.qml
+AvilableSoundsList 1.0 AvilableSoundsList.qml
+SoundItemContainer 1.0 SoundItemContainer.qml

@@ -1,0 +1,6 @@
+module pages
+OverviewPage 1.0 OverviewPage.qml
+MaterialsPage 1.0 MaterialsPage.qml
+SchedulePage 1.0 SchedulePage.qml
+GradesPage 1.0 GradesPage.qml
+QuestionsPage 1.0 QuestionsPage.qml

@@ -1,0 +1,4 @@
+module lmsdashboard
+singleton LMSService 1.0 LMSService.qml
+LMSSchema 1.0 LMSSchema.qml
+LMSDashboard 1.0 LMSDashboard.qml
